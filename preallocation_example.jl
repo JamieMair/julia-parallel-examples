@@ -11,7 +11,7 @@ end
 function example2!(x, cache)
     x .= zero(eltype(x))
     for t in 1:20
-        rand!(cachc) # Fills the "cache" array with random numbers
+        rand!(cache) # Fills the "cache" array with random numbers
         x .+= cache
     end
     return x
