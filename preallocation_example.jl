@@ -18,16 +18,24 @@ function example2!(x, cache)
 end
 
 # You can hide the cache variable in the following way, but function will only work with an array of size 10.
-example3 = begin
-    cache = zeros(10)
-    function example3(x)
-        x.=zero(eltype(x))
-        # Can also do some checks here to make sure the cache variable is appropriate.
-        for t in 1:20
-            rand!(cache)
-            x.+=cache
-        end
-        return x
+begin # Begin block changes the scope so cache is not global
+    cache = zeros(10) # Create the preallocated cache here
+    function example3!(x) # Define your function that uses the cache, this is called a "closure"
+        return example2!(x, cache)
     end
-    return example3
+
+    # Export the function so you can use it in the main body.
+    export example3!
 end
+
+# Benchmarking
+using BenchmarkTools
+@btime example()
+
+# For preallocation you need to create the arrays
+x = zeros(10)
+test_cache = similar(x);
+@btime example2!(x, test_cache)
+
+# Third example only needs x, but will only work with arrays of size 10 - there are ways to make this more general but it illustrates the point.
+@btime example3!(x)
