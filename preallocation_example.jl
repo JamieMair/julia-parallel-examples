@@ -29,7 +29,7 @@ end
 example4! = let cache=zeros(10)
     function example4!(x)
         if eltype(cache) != eltype(x) || length(cache) != length(x)
-            cache = similar(x)
+            cache = similar(x) # reallocate to change the size
         end
         return example2!(x, cache)
     end
@@ -50,6 +50,6 @@ test_cache = similar(x);
 
 # Fourth example, but can work with any x.
 @btime example4!(x);
-y = zeros(1000)
+y = zeros(1000);
 example4!(y) # Create the new cache
 @btime example4!(y); # Not sure why this allocates, but it is not that much
