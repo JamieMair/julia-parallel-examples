@@ -157,6 +157,7 @@ end
 function plot_threaded_gpu(T, samples, cpu_threaded_times, gpu_times)
     plt = plot(samples, cpu_threaded_times, label="Threaded"; markershape=:utriangle)
     plot!(samples, gpu_times, label="GPU"; markershape=:square, xscale=:log10, yscale=:log10)
+    plot!(;legend=:topleft)
     xlabel!("n")
     ylabel!("Time (s) for T=$T")
     return plt
@@ -185,12 +186,12 @@ function measure_array_times(samples, T)
     function measure_cpu(n)
         dist = zeros(Int32, n)
         cache = zeros(Float32, n)
-        return time_function(generate_distribution_arrays!, dist, cache, T)
+        return @belapsed generate_distribution_arrays!($dist, $cache, $T)
     end
     function measure_gpu(n)
         dist = cu(zeros(Int32, n))
         cache = cu(zeros(Float32, n))
-        return time_function(generate_distribution_arrays!, dist, cache, T)
+        return @belapsed CUDA.@sync generate_distribution_arrays!($dist, $cache, $T)
     end
     cpu_times = zeros(Float64, length(samples))
     gpu_times = zeros(Float64, length(samples))
