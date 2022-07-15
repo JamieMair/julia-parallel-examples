@@ -4,6 +4,7 @@ using Distributed
 
 @everywhere using Pkg;
 @everywhere Pkg.activate(".");
+@everywhere using BenchmarkTools;
 @everywhere include("common_code.jl")
 
 T = 1_000_000
@@ -17,10 +18,8 @@ function measure_scaling(;repeats=5)
     min_times = ones(Float64, length(samples)).*100000.0
     for (i, n) in enumerate(samples)
         mapping_array = T.*ones(Int, n)
-        time_taken = @elapsed begin
-            pmap(generate_walk_no_memory, mapping_array);
-        end
-        min_times[i] = min(min_times[i], time_taken)
+        time_taken = @belapsed pmap($generate_walk_no_memory, $mapping_array);
+        min_times[i] = time_taken
     end
     return samples, min_times
 end
