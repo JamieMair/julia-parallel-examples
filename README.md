@@ -20,3 +20,21 @@ using CUDA
 CUDA.versioninfo()
 ```
 This will install all the packages and download any artefacts you will need to run the code. Make sure you have an NVIDIA GPU available on your system. If not, avoid running the CUDA section of `main.jl`.
+
+## Results
+
+All results gathered using a 32 core AMD Threadripper CPU (2nd Gen Ryzen) and an NVIDIA 1080ti GPU. Using Julia 1.7.3.
+
+Serial vs Threaded (T=1000 - short):
+![figure 2](results/2_serial_vs_threaded_short.png)
+Serial vs Threaded (T=1,000,000 - long):
+![figure 3](results/3_serial_vs_threaded_long.png)
+
+Serial vs Threaded vs Multiprocessing (T=1,000,000 - long):
+![figure 4](results/4_serial_vs_threaded_vs_mp.png)
+
+Threads vs GPU Custom Kernel
+![figure 5](results/5_gpu_vs_threaded_custom_kernel.png)
+
+Threads vs GPU Vectorised Code (Same Function):
+![figure 6](results/6_gpu_vs_cpu_arrays.png)
